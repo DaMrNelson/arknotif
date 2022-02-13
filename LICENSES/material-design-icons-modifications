@@ -1,0 +1,2 @@
+/* MODIFICATIONS for Apache 2.0 License Compliance:
+    - Make CSS stylesheet fallback use /static/font/MaterialIcons-Regular.ttf instead of "https://fonts.gstatic.com/s/materialicons/v121/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2"

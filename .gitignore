@@ -1,0 +1,15 @@
+CHECKLIST.md
+TODO.md
+verification-last-record.png
+
+
+
+############################# "Standard" gitignore #############################
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so

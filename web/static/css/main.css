@@ -1,0 +1,7 @@
+.collapsible > li.disabled {
+    cursor: not-allowed;
+}
+.collapsible > li.disabled > .collapsible-header {
+    pointer-events: none;
+    background: #DDD;
+}

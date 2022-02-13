@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% from "macros/donate.html" import shamelessly_beg_for_money %}
+
+{% block pageres %}
+    <!-- jCrop -->
+    <script src="/static/js/jquery.Jcrop.min.js"></script>
+    <link rel="stylesheet" href="/static/css/jquery.Jcrop.min.css" type="text/css" />
+
+    <script src="/static/js/home.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <audio id="notif-sound" src="/static/sounds/notification.wav" preload="auto"></audio>
+
+    <!--<div class="container">-->
+    <div>
+        <ul class="collapsible">
+            <li id="preview" class="active">
+                <div class="collapsible-header"><i class="material-icons">remove_red_eye</i>1. Choose Window</div>
+                <div class="collapsible-body">
+                    <div>Please select a window to monitor:</div>
+                    <div style="display: flex;">
+                        <div class="input-field" style="flex-grow: 1; margin: 0;">
+                            <select id="window-list">
+                                <option value="" disabled selected>Choose window...</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                        </div>
+                        <div id="list-refresh" class="btn"><i class="material-icons">refresh</i></div>
+                    </div>
+                    <p>
+                        <i class="material-icons" style="font-size: inherit;">help</i>
+                        <i>Can't find the window? Try opening the in-game settings -> Video and change "Screen" to "Borderless" or "Windowed Mode"!</i>
+                    </p>
+
+                    <div class="divider"></div>
+
+                    <h5>Select the Queue Cancel Button</h5>
+                    <p>The next step is to find the Queue Cancel button and highlight it below. You must ensure your selection is <b>within</b> the Cancel button and does <b>not include even a single pixel outside of it!</b>
+                    This program works by checking for when the Cancel button disappears, but it is very sensitive so if even a single pixel changes it will go off.</p>
+
+                    <p>Simple rule of thumb: select less area, not more.</p>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="image-container">
+                                <img id="preview-img" style="width: 100%;"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <img src="/static/img/yes-1.png">
+                        <img src="/static/img/yes-2.png">
+                    </div>
+                    <div>
+                        <img src="/static/img/no-1.png">
+                    </div>
+
+                    <i class="material-icons" style="font-size: inherit;">help</i>
+                    <i>Black screen? Try opening the in-game settings -> Video and change "Screen" to "Borderless" or "Windowed Mode"!</i>
+
+                    <br>
+                    <br>
+                    <div id="preview-next" class="btn">Next</div>
+                </div>
+            </li>
+            <li id="verification" class="disabled">
+                <div class="collapsible-header"><i class="material-icons">verified_user</i>2. Verification</div>
+                <div class="collapsible-body">
+                    <div id="verification-running">
+                        <div>Verifying your selection... (est 5-10 seconds)</div>
+                        <div class="verification-skip btn">Skip</div>
+                    </div>
+                    <div id="verification-passed">
+                        <div>Verification passed! If you would like to retry verification go back to Step 1 and press "Next".</div>
+                    </div>
+                    <div id="verification-fail" style="display: none;">
+                        <div id="verification-fail-reason" class="red-text"></div>
+                        <div id="verification-retry" class="btn">Try again</div>
+                        <div class="verification-skip btn">Skip</div>
+                    </div>
+                </div>
+            <li id="notifications" class="disabled">
+                <div class="collapsible-header"><i class="material-icons">notifications</i>3. Configure Notifications</div>
+                <div class="collapsible-body">
+                    <div class="notif-section">
+                        <label class="notif-header">
+                            <input id="checkbox-notif-sound" type="checkbox" checked>
+                            <span>Make a Sound</span>
+                        </label>
+                        <div class="notif-body">
+                            <p>Plays a sound on this computer and makes the window flash when your queue pops.</p>
+                            <div id="test-sound" class="btn tooltipped" data-tooltip="Play a test sound">Test (2s)</div>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 30px 0px;"></div>
+                    <div class="notif-section">
+                        <label class="notif-header">
+                            <input id="checkbox-notif-discord" type="checkbox">
+                            <span>Send a Discord Message</span>
+                        </label>
+                        <div class="notif-body">
+                            <p>
+                                Sends a message to a Discord channel.
+                                <button href="#" class="btn modal-trigger" data-target="discord-instructions">Setup Instructions</button>
+                            </p>
+                            <div class="input-field">
+                                <input id="disc-webhook-url" type="text">
+                                <label>Webhook URL</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="disc-webhook-msg" type="text" value="Your ARK queue has popped!">
+                                <label>Message to Send</label>
+                            </div>
+                            <div id="test-discord" class="btn tooltipped" data-tooltip="Says 'This is a test message from ArkNotif'">Send Test Message</div>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 30px 0px;"></div>
+                    <div id="start-watching" class="btn">Start Watching</div>
+                </div>
+            </li>
+            <li id="monitor" class="disabled">
+                <div class="collapsible-header"><i class="material-icons">directions_run</i>4. Watch the Queue</div>
+                <div class="collapsible-body">
+                    <p>Now watching the queue. You can minimize this window now, just make sure you keep the app open and running!</p>
+                    <p>
+                        <b>Make sure your computer doesn't fall asleep!</b>
+                        On Windows 10 you should search "Power and Sleep Settings" from the taskbar and set "Sleep" to "Never".
+                        <b>This program will not work if your computer goes to sleep!</b>
+                    </p>
+                    <div id="stop-monitoring" class="btn">Cancel</div>
+                </div>
+            </li>
+            <li id="queue-pop" class="disabled">
+                <div class="collapsible-header"><i class="material-icons">notifications_active</i>5. Queue Popped</div>
+                <div class="collapsible-body">
+                    <p>Your queue has popped! Enjoy!</p>
+                    <div id="start-over" class="btn">Restart</div>
+                </div>
+            </li>
+        </ul>
+
+        {{ shamelessly_beg_for_money() }}
+    </div>
+
+    <div id="discord-instructions" class="modal">
+        <div class="modal-content">
+            <h4>How to Discord</h4>
+
+            <h5>1. Choose a Server or Create a New One</h5>
+            <p>
+                You will need to have admin permissions on this server. If you don't have that on any server its fine, just make a new one for free!
+                To make a new server you can click the "+" icon at the bottom of the server list on the side bar.
+                <div><img src="/static/img/new-server.png"></div>
+            </p>
+
+            <h5>2. Add a Webhook</h5>
+            <p>
+                At the top of the side bar that lists the available channels you should see the server name and a "V". Clicking this will open a dropdown. Choose "Server Settings" from this dropdown.
+                <br>
+                <div><img src="/static/img/server-settings.png"></div>
+                Next, find the "Integrations" section and click "Create Webhook" under the "Webhooks" card. Name it whatever you want and assign a channel.
+                <br>
+                Finally, <b>copy the Webhook URL</b>:
+                <div><img src="/static/img/create-webhook.png"></div>
+                And paste it on the webpage where it says "Webhook URL"!
+                <div><img src="/static/img/paste-webhook.png"></div>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close btn-flat">Close</a>
+        </div>
+    </div>
+
+{% endblock %}
