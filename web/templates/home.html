@@ -42,6 +42,14 @@
                     <p>The next step is to find the Queue Cancel button and highlight it below. You must ensure your selection is <b>within</b> the Cancel button and does <b>not include even a single pixel outside of it!</b>
                     This program works by checking for when the Cancel button disappears, but it is very sensitive so if even a single pixel changes it will go off.</p>
 
+                    <div>
+                        <img src="/static/img/yes-1.png">
+                        <img src="/static/img/yes-2.png">
+                    </div>
+                    <div>
+                        <img src="/static/img/no-1.png">
+                    </div>
+
                     <p>Simple rule of thumb: select less area, not more.</p>
                     <div class="card">
                         <div class="card-content">
@@ -49,14 +57,6 @@
                                 <img id="preview-img" style="width: 100%;"/>
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <img src="/static/img/yes-1.png">
-                        <img src="/static/img/yes-2.png">
-                    </div>
-                    <div>
-                        <img src="/static/img/no-1.png">
                     </div>
 
                     <i class="material-icons" style="font-size: inherit;">help</i>
@@ -143,7 +143,15 @@
             </li>
         </ul>
 
-        {{ shamelessly_beg_for_money() }}
+        <div>
+            <div class="left">
+                {{ shamelessly_beg_for_money() }}
+            </div>
+            <div class="right">
+                <a href="/licenses">Open Source Licenses</a>
+            </div>
+        </div>
+        <br>
     </div>
 
     <div id="discord-instructions" class="modal">

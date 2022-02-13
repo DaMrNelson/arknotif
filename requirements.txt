@@ -1,3 +1,5 @@
 flask # Please don't make fun of me
+#flaskwebgui # Forked version is used
+waitress
 Pillow
 pywin32 # win32gui replacement

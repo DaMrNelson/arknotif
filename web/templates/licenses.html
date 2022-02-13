@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-content">
+            {% for license in licenses %}
+                <h4>{{ license.name | e }}</h4>
+                <pre style="white-space: break-spaces;">{{ license.license | e }}</pre>
+            {% endfor %}
+
+            flaticon thumbs up created by Dave Gandy:
+            <a href="https://www.flaticon.com/free-icons/like" title="like icons">Like icons created by Dave Gandy - Flaticon</a>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,13 +1,15 @@
 import argparse
 import logging, logging.handlers
-from .app import app
+#from .app import app
+from .app import ui
 
 
 def main():
     args = process_args()
     setup_logging(args)
 
-    app.run(host=args.host, port=args.port, threaded=True)
+    #app.run(host=args.host, port=args.port, threaded=True)
+    ui.run()
 
 
 def process_args():

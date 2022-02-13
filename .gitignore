@@ -2,6 +2,12 @@ CHECKLIST.md
 TODO.md
 verification-last-record.png
 
+dist/
+build/
+venv/
+chrome/
+*.spec
+
 
 
 ############################# "Standard" gitignore #############################

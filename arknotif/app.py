@@ -1,25 +1,50 @@
+from logging.handlers import DEFAULT_TCP_LOGGING_PORT
 import os, os.path
 import random
+import requests
 from io import BytesIO
 from ctypes import windll
 
-
 import win32ui
 import win32con
-from flask import Flask, request, Response, render_template, jsonify, send_file
 from PIL import Image, ImageChops
 from win32 import win32gui
+from flask import Flask, request, Response, render_template, jsonify, send_file
+from flaskwebgui import FlaskUI
 
 app = Flask(__name__, template_folder="../web/templates/", static_folder="../web/static")
 #app.config["DEBUG"] = True
 
-WATCH_LAST_RECORD = "verification-last-record.png"
+ui = FlaskUI(app, width=1400, height=800, idle_interval=10)
+
+
+WATCH_LAST_RECORD = "arknotif-last-screenshot.png"
 MONITORING_RECORD = "monitoring-record"
 
 
 @app.route("/", methods=("GET",))
 def index():
     return render_template("home.html")
+
+@app.route("/licenses", methods=("GET",))
+def licenses():
+    LICENSE_DIR = "LICENSES"
+
+    with open("LICENSE", "r") as f:
+        licenses = [{"name": "ArkNotif", "license": f.read()}]
+
+    for fname in sorted(os.listdir(LICENSE_DIR)):
+        fpath = os.path.join(LICENSE_DIR, fname)
+
+        if os.path.isfile(fpath) and fname != "README.md":
+            with open(fpath, "r", encoding="utf8") as f:
+                licenses.append({"name": fname, "license": f.read()})
+
+    return render_template("licenses.html", licenses=licenses)
+
+@app.route("/keep-alive", methods=("GET",)) # Server exits after 10 seconds of inactivity; this is how flaskwebgui detects that you closed the browser
+def keep_alive():
+    return "OK"
 
 @app.route("/list", methods=("GET",)) # we only use obscure endpoints in this dev shop
 def fuck_you():
@@ -115,6 +140,14 @@ def watch():
     current_img.save(WATCH_LAST_RECORD, "PNG")
     return jsonify(result)
 
+@app.route("/discord", methods=("POST",))
+def discord_forward(): # In CORS we trust
+    # This function is a glaring vulnerability attackers could use to POST to our internal infrastructure!
+    # It sure is a good thing no hablo ingles
+    data = request.json
+    resp = requests.post(data["url"], data["body"], timeout=30)
+    return resp.content, resp.status_code
+
 
 def macaroni_salad(win):
     """ Pretty buggy, but it works well enough to be usable! """
@@ -167,6 +200,7 @@ def macaroni_salad(win):
             win_dc.DeleteDC()
         if win_dc_handle is not None:
             win32gui.ReleaseDC(win, win_dc_handle)
+
 
 @app.after_request
 def add_header(r):

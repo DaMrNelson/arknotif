@@ -128,6 +128,12 @@ $(document).ready(function() {
     updateList();
 });
 
+// Keep the server running
+// Server exits after 10 seconds of inactivity; this is how flaskwebgui detects that you closed the browser
+setInterval(() => {
+    $.get("/keep-alive");
+}, 2000);
+
 function updateList() {
     $.get("/list")
     .done(function(windowData) {
@@ -372,11 +378,17 @@ function sendDiscordNotification(msg) {
         return;
     }
 
-    $.ajax({
+    /*$.ajax({
         "type": "POST",
         "url": webhookUrl,
         "contentType": "application/json",
         "data": JSON.stringify({"content": msg})
+    })*/
+    $.ajax({
+        "type": "POST",
+        "url": "/discord", // In CORS we trust
+        "contentType": "application/json",
+        "data": JSON.stringify({"url": webhookUrl, "body": {"content": msg}})
     })
     .done(function(msg) {
         console.log("Successfully sent Discord message!");
