@@ -5,6 +5,8 @@ A simple tool that lets you know when you are out of Lost Ark's queues. You can 
 
 This app works by periodically screenshotting the game window and checking if the leave queue button is still there.
 
+![Screenshot](docs/screenshot.png)
+
 # Running from Binaries
 Only Windows is supported right now. **Please [submit a ticket](https://github.com/DaMrNelson/arknotif/issues/new) if the app is not working!** This is my first time releasing packaged software for Windows and I do not expect it to be without issue.
 1. Download the package from the [releases page](https://github.com/DaMrNelson/arknotif/releases).
